@@ -1,15 +1,39 @@
+import { useState, useEffect } from 'react';
+
 interface ScoreDisplayProps {
     score: number;
 }
 
 export default function ScoreDisplay({ score }: ScoreDisplayProps) {
+    const [displayScore, setDisplayScore] = useState(0);
     const radius = 70;
     const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (score / 100) * circumference;
+    const offset = circumference - (displayScore / 100) * circumference;
 
-    const getScoreColor = () => {
-        if (score >= 70) return 'var(--color-success)';
-        if (score >= 40) return 'var(--color-warning)';
+    // Animate score from 0 to target
+    useEffect(() => {
+        setDisplayScore(0);
+        const duration = 1200;
+        const startTime = performance.now();
+
+        const animate = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setDisplayScore(Math.round(eased * score));
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+
+        requestAnimationFrame(animate);
+    }, [score]);
+
+    const getScoreColor = (s: number) => {
+        if (s >= 70) return 'var(--color-success)';
+        if (s >= 40) return 'var(--color-warning)';
         return 'var(--color-danger)';
     };
 
@@ -20,6 +44,8 @@ export default function ScoreDisplay({ score }: ScoreDisplayProps) {
         if (score >= 30) return 'Needs Work';
         return 'Poor';
     };
+
+    const color = getScoreColor(displayScore);
 
     return (
         <div className="score-display">
@@ -40,7 +66,7 @@ export default function ScoreDisplay({ score }: ScoreDisplayProps) {
                         cy="90"
                         r={radius}
                         fill="none"
-                        stroke={getScoreColor()}
+                        stroke={color}
                         strokeWidth="10"
                         strokeLinecap="round"
                         strokeDasharray={circumference}
@@ -50,13 +76,13 @@ export default function ScoreDisplay({ score }: ScoreDisplayProps) {
                     />
                 </svg>
                 <div className="score-value">
-                    <span className="score-number" style={{ color: getScoreColor() }}>
-                        {score}
+                    <span className="score-number" style={{ color }}>
+                        {displayScore}
                     </span>
                     <span className="score-max">/100</span>
                 </div>
             </div>
-            <p className="score-label" style={{ color: getScoreColor() }}>
+            <p className="score-label" style={{ color: getScoreColor(score) }}>
                 {getScoreLabel()}
             </p>
         </div>
