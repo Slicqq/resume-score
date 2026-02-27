@@ -22,6 +22,7 @@
   --color-warning-bg: #fdf5e3;
   --color-danger: #c44040;
   --color-danger-bg: #fde8e8;
+  --color-loading-bg: rgba(254, 246, 240, 0.88);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -30,6 +31,34 @@
   --shadow-md: 0 4px 16px rgba(45, 31, 20, 0.08);
   --shadow-lg: 0 8px 32px rgba(45, 31, 20, 0.1);
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ─── Dark Theme ────────────────────────────────────────────────────── */
+
+[data-theme='dark'] {
+  --color-bg: #1a1714;
+  --color-surface: #242019;
+  --color-surface-alt: #2e2920;
+  --color-surface-hover: #38322a;
+  --color-border: #3d362c;
+  --color-border-light: #332d24;
+  --color-text: #f0e8df;
+  --color-text-secondary: #c4b8a9;
+  --color-text-muted: #8a7e70;
+  --color-primary: #d4885a;
+  --color-primary-glow: rgba(212, 136, 90, 0.2);
+  --color-primary-hover: #e09568;
+  --color-primary-light: #3d2e22;
+  --color-success: #5bab7a;
+  --color-success-bg: rgba(91, 171, 122, 0.12);
+  --color-warning: #d4a017;
+  --color-warning-bg: rgba(212, 160, 23, 0.1);
+  --color-danger: #e06060;
+  --color-danger-bg: rgba(224, 96, 96, 0.1);
+  --color-loading-bg: rgba(26, 23, 20, 0.88);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* ─── Reset & Base ──────────────────────────────────────────────────── */
@@ -55,6 +84,7 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -83,6 +113,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .logo {
@@ -449,6 +486,10 @@ body {
   font-size: 0.8rem;
 }
 
+.btn-icon {
+  padding: 0.45rem;
+}
+
 .btn-text {
   background: none;
   border: none;
@@ -669,7 +710,7 @@ body {
 .loading-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(254, 246, 240, 0.88);
+  background: var(--color-loading-bg);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;

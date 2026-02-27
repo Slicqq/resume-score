@@ -4,6 +4,7 @@ import BreakdownBar from './components/BreakdownBar';
 import Suggestions from './components/Suggestions';
 import ScoreHistory, { addToHistory } from './components/ScoreHistory';
 import ATSKeywordChecker from './components/ATSKeywordChecker';
+import { useTheme } from './hooks/useTheme';
 import { analyzeResume, type AnalysisResult } from './utils/scoringEngine';
 import { SAMPLE_RESUME } from './utils/sampleResume';
 
@@ -12,6 +13,7 @@ function App() {
   const [resumeText, setResumeText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   const handleAnalyze = (text: string) => {
     setIsAnalyzing(true);
@@ -54,17 +56,43 @@ function App() {
             <h1>Resume Score</h1>
           </div>
           <p className="tagline">Analyze your resume with rule-based scoring</p>
-          <button
-            className="btn btn-ghost btn-sm"
-            onClick={() => setShowHistory(!showHistory)}
-            type="button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-            History
-          </button>
+          <div className="header-actions">
+            <button
+              className="btn btn-ghost btn-sm btn-icon"
+              onClick={toggleTheme}
+              type="button"
+              title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            >
+              {theme === 'light' ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              )}
+            </button>
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={() => setShowHistory(!showHistory)}
+              type="button"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              History
+            </button>
+          </div>
         </div>
       </header>
 
