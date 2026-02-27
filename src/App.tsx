@@ -2,6 +2,8 @@ import { useState } from 'react';
 import ScoreDisplay from './components/ScoreDisplay';
 import BreakdownBar from './components/BreakdownBar';
 import Suggestions from './components/Suggestions';
+import ScoreHistory, { addToHistory } from './components/ScoreHistory';
+import ATSKeywordChecker from './components/ATSKeywordChecker';
 import { analyzeResume, type AnalysisResult } from './utils/scoringEngine';
 import { SAMPLE_RESUME } from './utils/sampleResume';
 
@@ -9,6 +11,7 @@ function App() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [resumeText, setResumeText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const handleAnalyze = (text: string) => {
     setIsAnalyzing(true);
@@ -19,6 +22,9 @@ function App() {
       const analysis = analyzeResume(text);
       setResult(analysis);
       setIsAnalyzing(false);
+      // Save to history
+      const wordCount = text.trim().split(/\s+/).length;
+      addToHistory(analysis.totalScore, wordCount);
     }, 400);
   };
 
@@ -48,6 +54,17 @@ function App() {
             <h1>Resume Score</h1>
           </div>
           <p className="tagline">Analyze your resume with rule-based scoring</p>
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={() => setShowHistory(!showHistory)}
+            type="button"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            History
+          </button>
         </div>
       </header>
 
@@ -73,6 +90,14 @@ function App() {
                 </svg>
                 Analyze Another
               </button>
+              <button className="btn btn-ghost" onClick={() => window.print()} type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 9V2h12v7" />
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                  <rect x="6" y="14" width="12" height="8" />
+                </svg>
+                Export PDF
+              </button>
             </div>
             <div className="results-grid">
               <div className="results-score-col">
@@ -81,6 +106,7 @@ function App() {
               <div className="results-detail-col">
                 <BreakdownBar categories={result.categories} />
                 <Suggestions suggestions={result.suggestions} />
+                <ATSKeywordChecker resumeText={resumeText} />
               </div>
             </div>
           </div>
@@ -91,6 +117,11 @@ function App() {
       <footer className="app-footer">
         <p>100% client-side · No data is sent to any server · Rule-based analysis</p>
       </footer>
+
+      {/* Score History Panel */}
+      {showHistory && (
+        <ScoreHistory onClose={() => setShowHistory(false)} />
+      )}
 
       {/* Loading overlay */}
       {isAnalyzing && (
