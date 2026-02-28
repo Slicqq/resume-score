@@ -38,6 +38,7 @@ export function addToHistory(score: number, wordCount: number): void {
     // Keep last 10 entries
     const updated = [entry, ...history].slice(0, 10);
     saveHistory(updated);
+    window.dispatchEvent(new Event('score-history-updated'));
 }
 
 interface ScoreHistoryProps {
@@ -49,6 +50,12 @@ export default function ScoreHistory({ onClose }: ScoreHistoryProps) {
 
     useEffect(() => {
         setHistory(loadHistory());
+
+        const handleUpdate = () => {
+            setHistory(loadHistory());
+        };
+        window.addEventListener('score-history-updated', handleUpdate);
+        return () => window.removeEventListener('score-history-updated', handleUpdate);
     }, []);
 
     const handleClear = () => {

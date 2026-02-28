@@ -11,10 +11,8 @@ function getInitialTheme(): Theme {
     } catch {
         // ignore
     }
-    // Respect system preference
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-    }
+
+    // Default to light mode as requested
     return 'light';
 }
 

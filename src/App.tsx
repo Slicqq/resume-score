@@ -128,7 +128,8 @@ function App() {
               </button>
               <button
                 className="btn btn-ghost"
-                onClick={() => {
+                onClick={(e) => {
+                  const btn = e.currentTarget;
                   const lines = [
                     `Resume Score: ${result.totalScore}/100`,
                     '',
@@ -140,7 +141,6 @@ function App() {
                     result.suggestions.forEach((s) => lines.push(`  • ${s}`));
                   }
                   navigator.clipboard.writeText(lines.join('\n')).then(() => {
-                    const btn = document.activeElement as HTMLButtonElement;
                     const orig = btn.innerHTML;
                     btn.textContent = '✓ Copied!';
                     setTimeout(() => { btn.innerHTML = orig; }, 1500);
